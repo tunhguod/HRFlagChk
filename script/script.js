@@ -63,9 +63,14 @@ function validateData() {
 // ---------- 計算 ----------
 
 // value を min〜max の範囲で循環させる
+// value を 0 以上 n 未満に収める（負の数・小数にも対応した剰余）
+function mod(value, n) {
+  return ((value % n) + n) % n;
+}
+
+// 整数 value を min〜max の範囲で循環させる
 function wrap(value, min, max) {
-  const range = max - min + 1;
-  return ((value - min) % range + range) % range + min;
+  return mod(value - min, max - min + 1) + min;
 }
 
 function sum(arr) {
@@ -168,14 +173,16 @@ function render() {
 
 // ---------- リール操作 ----------
 
+// 背景画像の縦位置 (px)。画像は縦に繰り返し表示されるため、REEL_IMAGE_HEIGHT の倍数ずれても見た目は同じ。
+// 吸着アニメーション中は継ぎ目をまたいで逆回転しないよう範囲外の値も取り、終わってから 0〜REEL_IMAGE_HEIGHT に戻す。
+let reelOffsetY = 0;
+let snapTimer = null;
+
 const drag = {
   active: false,
   startY: 0,
   startOffsetY: 0,
-  offsetY: 0, // 背景画像の縦位置 (0〜REEL_IMAGE_HEIGHT)
 };
-
-let snapTimer = null;
 
 // 現在のレイアウトと拡大率（fitToViewport で更新）
 const screenFit = {
@@ -183,47 +190,56 @@ const screenFit = {
   scale: 1,
 };
 
-function setReelOffset(offsetY, animate) {
-  clearTimeout(snapTimer);
+function applyReelOffset(animate) {
   el.reel.style.transition = animate ? `background-position ${SNAP_DURATION_MS}ms ease-out` : '';
-  el.reel.style.backgroundPosition = `0px ${offsetY + REEL_OFFSET_Y}px`;
-  if (animate) {
-    snapTimer = setTimeout(() => {
-      el.reel.style.transition = '';
-    }, SNAP_DURATION_MS);
-  }
+  el.reel.style.backgroundPosition = `0px ${reelOffsetY + REEL_OFFSET_Y}px`;
 }
 
-// 指定コマ位置に合わせて表示・判定を更新する
+// 見た目を変えずに位置を 0〜REEL_IMAGE_HEIGHT に戻す（アニメーション中なら即座に到達点へ）
+function normalizeReelOffset() {
+  clearTimeout(snapTimer);
+  reelOffsetY = mod(reelOffsetY, REEL_IMAGE_HEIGHT);
+  applyReelOffset(false);
+}
+
+function setReelOffset(offsetY, animate) {
+  clearTimeout(snapTimer);
+  reelOffsetY = offsetY;
+  applyReelOffset(animate);
+  if (animate) snapTimer = setTimeout(normalizeReelOffset, SNAP_DURATION_MS);
+}
+
+// index 番目のコマ位置（範囲外も可）まで動かし、表示・判定を更新する
 function moveReelTo(index, animate) {
   const normalized = wrap(index, 0, TOTAL_SYMBOLS - 1);
-  drag.offsetY = normalized * SYMBOL_HEIGHT;
   state.reelPosition = normalized === 0 ? TOTAL_SYMBOLS : normalized;
-  setReelOffset(drag.offsetY, animate);
+  setReelOffset(index * SYMBOL_HEIGHT, animate);
   render();
+}
+
+function currentSymbolIndex() {
+  return Math.round(reelOffsetY / SYMBOL_HEIGHT);
 }
 
 function endDrag() {
   if (!drag.active) return;
   drag.active = false;
   // 最寄りのコマに吸着させる
-  moveReelTo(Math.round(drag.offsetY / SYMBOL_HEIGHT), true);
+  moveReelTo(currentSymbolIndex(), true);
 }
 
 el.reel.addEventListener('pointerdown', (e) => {
+  normalizeReelOffset();
   drag.active = true;
   drag.startY = e.clientY;
-  drag.startOffsetY = drag.offsetY;
-  setReelOffset(drag.offsetY, false);
+  drag.startOffsetY = reelOffsetY;
   el.reel.setPointerCapture(e.pointerId);
 });
 
 el.reel.addEventListener('pointermove', (e) => {
   if (!drag.active) return;
   // 画面上の移動量を拡大率で割り、リール画像上の移動量に直す
-  const offsetY = drag.startOffsetY + (e.clientY - drag.startY) / screenFit.scale;
-  drag.offsetY = wrap(offsetY, 0, REEL_IMAGE_HEIGHT - 1);
-  setReelOffset(drag.offsetY, false);
+  setReelOffset(drag.startOffsetY + (e.clientY - drag.startY) / screenFit.scale, false);
 });
 
 el.reel.addEventListener('pointerup', endDrag);
@@ -234,7 +250,7 @@ el.reel.addEventListener('keydown', (e) => {
   const step = { ArrowDown: 1, ArrowUp: -1 }[e.key];
   if (!step) return;
   e.preventDefault();
-  moveReelTo(Math.round(drag.offsetY / SYMBOL_HEIGHT) + step, true);
+  moveReelTo(currentSymbolIndex() + step, true);
 });
 
 // ---------- 条件操作 ----------
