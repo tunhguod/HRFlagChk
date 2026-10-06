@@ -7,6 +7,14 @@ const FLAG_DENOMINATOR = 65536;
 const SLIP_RANGE = [0, 4];
 const SETTING_RANGE = [1, 6];
 
+// 画面に収めるレイアウトの設計幅 (px)。高さは内容から決まる
+const LAYOUTS = {
+  tall: { width: 372 }, // 縦長画面: リール＋条件の下に判別結果
+  wide: { width: 820 }, // 横長画面: リール・条件・判別結果を横一列
+};
+const VIEWPORT_MARGIN = 8; // 画面端との余白 (px)
+const MAX_SCALE = 1.5;     // 大画面で拡大しすぎないための上限
+
 const state = {
   slip: 0,                    // 滑りコマ数
   setting: 1,                 // 設定
@@ -16,6 +24,7 @@ const state = {
 };
 
 const el = {
+  app: document.getElementById('app'),
   reel: document.getElementById('reel'),
   slipValue: document.getElementById('slip-value'),
   settingValue: document.getElementById('setting-value'),
@@ -168,6 +177,12 @@ const drag = {
 
 let snapTimer = null;
 
+// 現在のレイアウトと拡大率（fitToViewport で更新）
+const viewport = {
+  layout: null,
+  scale: 1,
+};
+
 function setReelOffset(offsetY, animate) {
   clearTimeout(snapTimer);
   el.reel.style.transition = animate ? `background-position ${SNAP_DURATION_MS}ms ease-out` : '';
@@ -205,7 +220,8 @@ el.reel.addEventListener('pointerdown', (e) => {
 
 el.reel.addEventListener('pointermove', (e) => {
   if (!drag.active) return;
-  const offsetY = drag.startOffsetY + (e.clientY - drag.startY);
+  // 画面上の移動量を拡大率で割り、リール画像上の移動量に直す
+  const offsetY = drag.startOffsetY + (e.clientY - drag.startY) / viewport.scale;
   drag.offsetY = wrap(offsetY, 0, REEL_IMAGE_HEIGHT - 1);
   setReelOffset(drag.offsetY, false);
 });
@@ -247,5 +263,37 @@ bindStepper('setting', 'setting', SETTING_RANGE);
 bindToggle('reel-basis-toggle', 'showsPressPosition');
 bindToggle('press-order-toggle', 'isCenterFirst');
 
+// ---------- 画面サイズへの追従 ----------
+
+function measureLayout(name) {
+  el.app.classList.remove(...Object.keys(LAYOUTS).map((key) => `layout-${key}`));
+  el.app.classList.add(`layout-${name}`);
+  el.app.style.width = `${LAYOUTS[name].width}px`;
+  return { width: el.app.offsetWidth, height: el.app.offsetHeight };
+}
+
+// 縦長・横長のうち大きく表示できる方を選び、画面に収まる倍率で拡大縮小する
+function fitToViewport() {
+  // innerWidth/innerHeight はスマホで中身がはみ出すと広がってしまうため、表示領域そのものの大きさを使う
+  const { clientWidth, clientHeight } = document.documentElement;
+  const availableWidth = clientWidth - VIEWPORT_MARGIN * 2;
+  const availableHeight = clientHeight - VIEWPORT_MARGIN * 2;
+  const scaleFor = ({ width, height }) => Math.min(availableWidth / width, availableHeight / height);
+
+  let best = null;
+  for (const name of Object.keys(LAYOUTS)) {
+    const scale = scaleFor(measureLayout(name));
+    if (!best || scale > best.scale) best = { name, scale };
+  }
+  measureLayout(best.name);
+
+  viewport.layout = best.name;
+  viewport.scale = Math.min(best.scale, MAX_SCALE);
+  el.app.style.setProperty('--scale', viewport.scale);
+}
+
+window.addEventListener('resize', fitToViewport);
+
 validateData();
 moveReelTo(0, false);
+fitToViewport();
