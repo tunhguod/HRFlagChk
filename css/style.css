@@ -1,0 +1,326 @@
+:root {
+  --color-bg: #111;
+  --color-text: #fff;
+  --color-panel: rgba(255, 255, 255, 0.08);
+  --color-box: rgba(255, 255, 255, 0.1);
+  --color-button: #333;
+  --color-button-hover: #444;
+  --color-button-active: #555;
+  --color-switch-track: #ddd;
+  --color-switch-text: #333;
+  --color-switch-off: #4caf50;
+  --color-switch-on: #2196f3;
+  --color-link: #4fc3f7;
+  --color-link-hover: #81d4fa;
+  --color-focus: #ffd54f;
+  --color-badge-key: #555;
+  --color-badge-value: #6a6a6a;
+  --color-badge-gold: #9e8622;
+  --color-badge-blue: #3b6aa0;
+  --color-badge-red: #a62828;
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  --radius: 8px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--color-link-hover);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ---------- レイアウト ---------- */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}
+
+.top-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+/* ---------- リール ---------- */
+
+.reel-window {
+  width: 180px;
+  height: 320px;
+  overflow: hidden;
+  border: 3px solid #fff;
+  border-radius: 10px;
+  background: black;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.reel {
+  width: 100%;
+  height: 100%;
+  background-image: url('../img/reel.png');
+  background-repeat: repeat-y;
+  cursor: grab;
+}
+
+.reel:active {
+  cursor: grabbing;
+}
+
+.reel:focus-visible {
+  outline-offset: -4px;
+}
+
+.reel.is-center-first {
+  background-image: url('../img/reel_c.png');
+}
+
+/* ---------- 条件パネル ---------- */
+
+.control-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 30px 100px;
+  background: var(--color-panel);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.control-label {
+  font-weight: bold;
+  font-size: 16px;
+  opacity: 0.8;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stepper-value {
+  min-width: 20px;
+  text-align: center;
+  font-size: 16px;
+}
+
+.stepper-button {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: var(--color-button);
+  color: var(--color-text);
+  border: none;
+  border-radius: 4px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.stepper-button:hover {
+  background: var(--color-button-hover);
+}
+
+.stepper-button:active {
+  background: var(--color-button-active);
+}
+
+/* ---------- 切り替えスイッチ ---------- */
+
+.switch {
+  position: relative;
+  display: flex;
+  width: 240px;
+  height: 30px;
+  padding: 3px;
+  background-color: var(--color-switch-track);
+  border-radius: 15px;
+  box-shadow: inset 0 0 3px #999;
+  cursor: pointer;
+}
+
+.switch:has(.switch-input:focus-visible) {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* 見た目は隠すが、キーボード操作・読み上げの対象には残す */
+.switch-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.switch-slider {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  height: calc(100% - 6px);
+  background-color: var(--color-switch-off);
+  border-radius: 12px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.switch-input:checked ~ .switch-slider {
+  transform: translateX(100%);
+  background-color: var(--color-switch-on);
+}
+
+.switch-option {
+  position: relative;
+  flex: 1;
+  align-self: center;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--color-switch-text);
+  transition: color 0.3s ease;
+}
+
+.switch-input:not(:checked) ~ .switch-option--off,
+.switch-input:checked ~ .switch-option--on {
+  color: var(--color-text);
+}
+
+/* ---------- 判別結果 ---------- */
+
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.info-box {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--color-box);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.info-total {
+  margin-left: auto;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.info-label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: bold;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+.badge {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.badge.is-placeholder {
+  visibility: hidden;
+}
+
+.badge-key {
+  padding: 3px 5px;
+  background-color: var(--color-badge-key);
+  text-align: center;
+}
+
+.badge-key--gold {
+  background-color: var(--color-badge-gold);
+}
+
+.badge-key--blue {
+  background-color: var(--color-badge-blue);
+}
+
+.badge-key--red {
+  background-color: var(--color-badge-red);
+}
+
+.badge-value {
+  width: 2.5em;
+  padding: 2px 0;
+  background-color: var(--color-badge-value);
+  font-family: monospace;
+  text-align: center;
+}
+
+.note {
+  margin-left: auto;
+  font-size: 12px;
+}
+
+/* ---------- スマホ ---------- */
+
+@media (max-width: 680px) {
+  .control-panel {
+    padding: 20px 24px;
+  }
+
+  .switch {
+    width: 200px;
+  }
+}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ハイパラフラグチェッカー</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <script src="./script/data.js" defer></script>
+  <script src="./script/script.js" defer></script>
+</head>
+
+<body>
+  <main class="app">
+    <div class="top-row">
+      <div class="reel-window">
+        <div id="reel" class="reel" tabindex="0" role="slider" aria-label="リール位置（↑↓キーでも操作可）"
+          aria-valuemin="1" aria-valuemax="21"></div>
+      </div>
+
+      <section class="control-panel" aria-label="条件">
+        <div class="control">
+          <span class="control-label" id="slip-label">滑りコマ数</span>
+          <div class="stepper" role="group" aria-labelledby="slip-label">
+            <button type="button" class="stepper-button" id="slip-decrease" aria-label="滑りコマ数を減らす">−</button>
+            <output id="slip-value" class="stepper-value" aria-live="polite">0</output>
+            <button type="button" class="stepper-button" id="slip-increase" aria-label="滑りコマ数を増やす">＋</button>
+          </div>
+        </div>
+
+        <div class="control">
+          <span class="control-label" id="setting-label">設定</span>
+          <div class="stepper" role="group" aria-labelledby="setting-label">
+            <button type="button" class="stepper-button" id="setting-decrease" aria-label="設定を下げる">−</button>
+            <output id="setting-value" class="stepper-value" aria-live="polite">1</output>
+            <button type="button" class="stepper-button" id="setting-increase" aria-label="設定を上げる">＋</button>
+          </div>
+        </div>
+
+        <div class="control">
+          <span class="control-label" id="reel-basis-label">リールの位置</span>
+          <label class="switch">
+            <input type="checkbox" id="reel-basis-toggle" class="switch-input" aria-labelledby="reel-basis-label">
+            <span class="switch-slider"></span>
+            <span class="switch-option switch-option--off">リール停止時</span>
+            <span class="switch-option switch-option--on">ボタン押下時</span>
+          </label>
+        </div>
+
+        <div class="control">
+          <span class="control-label" id="press-order-label">押し順</span>
+          <label class="switch">
+            <input type="checkbox" id="press-order-toggle" class="switch-input" aria-labelledby="press-order-label">
+            <span class="switch-slider"></span>
+            <span class="switch-option switch-option--off">左1st</span>
+            <span class="switch-option switch-option--on">中1st</span>
+          </label>
+        </div>
+      </section>
+    </div>
+
+    <section class="info-panel" aria-label="判別結果" aria-live="polite">
+      <div class="info-box">
+        <div>
+          <span class="info-label">フラグ (BB)</span>
+          <div id="bb-flags" class="badge-list"></div>
+        </div>
+        <div class="info-total">
+          <span class="info-label">フラグ合算</span>
+          <span id="bb-total"></span>
+        </div>
+      </div>
+      <div class="info-box">
+        <div>
+          <span class="info-label">フラグ (RB)</span>
+          <div id="rb-flags" class="badge-list"></div>
+        </div>
+        <div class="info-total">
+          <span class="info-label">フラグ合算</span>
+          <span id="rb-total"></span>
+        </div>
+      </div>
+      <div class="info-box">
+        <div>
+          <span class="info-label">小役</span>
+          <span id="prizes"></span>
+        </div>
+      </div>
+      <div class="info-box">
+        <div>
+          <span class="info-label">制御表</span>
+          <a href="https://docs.google.com/spreadsheets/d/1UNeeJEg-8OYhitDBvvdec_t7KXVm53Dh3pOAyrQQS9M/edit?gid=157777121#gid=157777121"
+            target="_blank" rel="noopener">スプレッドシートを開く</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="note">
+      (不具合報告/ご質問等は <a href="https://x.com/doughnut_777" target="_blank" rel="noopener">@doughnut_777</a> 宛にお願いします)
+    </footer>
+  </main>
+</body>
+
+</html>
