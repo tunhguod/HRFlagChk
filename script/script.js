@@ -178,7 +178,7 @@ const drag = {
 let snapTimer = null;
 
 // 現在のレイアウトと拡大率（fitToViewport で更新）
-const viewport = {
+const screenFit = {
   layout: null,
   scale: 1,
 };
@@ -221,7 +221,7 @@ el.reel.addEventListener('pointerdown', (e) => {
 el.reel.addEventListener('pointermove', (e) => {
   if (!drag.active) return;
   // 画面上の移動量を拡大率で割り、リール画像上の移動量に直す
-  const offsetY = drag.startOffsetY + (e.clientY - drag.startY) / viewport.scale;
+  const offsetY = drag.startOffsetY + (e.clientY - drag.startY) / screenFit.scale;
   drag.offsetY = wrap(offsetY, 0, REEL_IMAGE_HEIGHT - 1);
   setReelOffset(drag.offsetY, false);
 });
@@ -287,9 +287,9 @@ function fitToViewport() {
   }
   measureLayout(best.name);
 
-  viewport.layout = best.name;
-  viewport.scale = Math.min(best.scale, MAX_SCALE);
-  el.app.style.setProperty('--scale', viewport.scale);
+  screenFit.layout = best.name;
+  screenFit.scale = Math.min(best.scale, MAX_SCALE);
+  el.app.style.setProperty('--scale', screenFit.scale);
 }
 
 window.addEventListener('resize', fitToViewport);
