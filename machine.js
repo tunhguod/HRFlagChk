@@ -1,37 +1,39 @@
-// 制御表・フラグ定義データ
+// ハイパラ（ハイパーラッシュ）の機種定義
+// 形式は slot-flag-checker-core の README.md を参照。
+//
 // 制御表の行はリール位置（21コマ、行0 = 21番, 行20 = 1番）、列は FLAGS / PRIZE_NAMES の並び順に対応する。
 // 値はそのフラグで停止する滑りコマ数（0〜4）。5 はどの滑りコマ数でも該当しない（停止しない）ことを表す。
 
-// type: 'BB' | 'RB'
+// group: 'BB' | 'RB'
 // nums: 設定1〜6の置数（/65536）
-// color: バッジの色（'gold' | 'blue' | 'red'、style.css の .badge-key--* に対応）
-// leftRanges: 指定時、左1stかつ押下位置がこの範囲内のときだけ color を付ける
+// color: バッジの色（下の colors のキー）
+// colorWhen: 指定時、その押し順・押下位置のときだけ color を付ける
 const FLAGS = [
-  { name: 'A', type: 'BB', nums: [16, 16, 16, 16, 16, 16] },
-  { name: 'B', type: 'BB', nums: [8, 8, 8, 17, 17, 17] },
-  { name: 'C', type: 'BB', nums: [17, 18, 21, 22, 23, 25] },
-  { name: 'D', type: 'BB', nums: [17, 18, 20, 22, 24, 26] },
-  { name: 'E', type: 'BB', nums: [44, 45, 47, 48, 50, 52] },
-  { name: 'F', type: 'BB', nums: [20, 20, 20, 20, 20, 20] },
-  { name: 'G', type: 'BB', nums: [30, 31, 32, 33, 35, 36] },
-  { name: 'H1', type: 'BB', nums: [20, 20, 20, 20, 20, 20] },
-  { name: 'H2', type: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'red', leftRanges: [[1, 8], [14, 21]] },
-  { name: 'I', type: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'red' },
-  { name: 'J', type: 'BB', nums: [13, 13, 13, 13, 13, 13], color: 'blue' },
-  { name: 'K', type: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'blue' },
-  { name: 'L1', type: 'BB', nums: [20, 20, 20, 20, 20, 20] },
-  { name: 'L2', type: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'red', leftRanges: [[1, 4], [14, 21]] },
-  { name: 'M', type: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'blue' },
-  { name: 'N', type: 'BB', nums: [4, 4, 6, 6, 8, 12], color: 'gold' },
-  { name: 'O', type: 'BB', nums: [7, 7, 7, 7, 7, 7], color: 'blue' },
-  { name: 'P', type: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'gold' },
-  { name: 'Q', type: 'BB', nums: [7, 8, 9, 11, 12, 13], color: 'blue' },
-  { name: 'R', type: 'RB', nums: [10, 10, 10, 10, 10, 10], color: 'blue' },
-  { name: 'S', type: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'gold' },
-  { name: 'T', type: 'RB', nums: [10, 11, 12, 14, 15, 18], color: 'blue' },
-  { name: 'U', type: 'RB', nums: [23, 23, 23, 23, 23, 23] },
-  { name: 'V', type: 'RB', nums: [20, 20, 20, 20, 20, 20] },
-  { name: 'W', type: 'RB', nums: [63, 66, 71, 75, 80, 84] },
+  { name: 'A', group: 'BB', nums: [16, 16, 16, 16, 16, 16] },
+  { name: 'B', group: 'BB', nums: [8, 8, 8, 17, 17, 17] },
+  { name: 'C', group: 'BB', nums: [17, 18, 21, 22, 23, 25] },
+  { name: 'D', group: 'BB', nums: [17, 18, 20, 22, 24, 26] },
+  { name: 'E', group: 'BB', nums: [44, 45, 47, 48, 50, 52] },
+  { name: 'F', group: 'BB', nums: [20, 20, 20, 20, 20, 20] },
+  { name: 'G', group: 'BB', nums: [30, 31, 32, 33, 35, 36] },
+  { name: 'H1', group: 'BB', nums: [20, 20, 20, 20, 20, 20] },
+  { name: 'H2', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'red', colorWhen: { orders: ['left'], positions: [[1, 8], [14, 21]] } },
+  { name: 'I', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'red' },
+  { name: 'J', group: 'BB', nums: [13, 13, 13, 13, 13, 13], color: 'blue' },
+  { name: 'K', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'blue' },
+  { name: 'L1', group: 'BB', nums: [20, 20, 20, 20, 20, 20] },
+  { name: 'L2', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'red', colorWhen: { orders: ['left'], positions: [[1, 4], [14, 21]] } },
+  { name: 'M', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'blue' },
+  { name: 'N', group: 'BB', nums: [4, 4, 6, 6, 8, 12], color: 'gold' },
+  { name: 'O', group: 'BB', nums: [7, 7, 7, 7, 7, 7], color: 'blue' },
+  { name: 'P', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'gold' },
+  { name: 'Q', group: 'BB', nums: [7, 8, 9, 11, 12, 13], color: 'blue' },
+  { name: 'R', group: 'RB', nums: [10, 10, 10, 10, 10, 10], color: 'blue' },
+  { name: 'S', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'gold' },
+  { name: 'T', group: 'RB', nums: [10, 11, 12, 14, 15, 18], color: 'blue' },
+  { name: 'U', group: 'RB', nums: [23, 23, 23, 23, 23, 23] },
+  { name: 'V', group: 'RB', nums: [20, 20, 20, 20, 20, 20] },
+  { name: 'W', group: 'RB', nums: [63, 66, 71, 75, 80, 84] },
 ];
 
 const FLAG_MAP = {
@@ -147,4 +149,53 @@ const PRIZE_MAP = {
     [2, 2, 2, 0, 1, 4, 4, 1, 1],
     [0, 0, 0, 1, 2, 1, 1, 2, 2],
   ],
+};
+
+export default {
+  id: 'hyper-rush',
+  reel: {
+    symbols: 21,
+    viewHeight: 320, // リール窓の高さ (px)
+    offsetY: 25,     // 図柄を窓の中央に寄せるための表示オフセット (px)
+    referenceRow: 1, // 押下位置 = 表示中の位置 - referenceRow - 滑りコマ数
+  },
+  settings: [1, 2, 3, 4, 5, 6],
+  maxSlip: 4,
+  denominator: 65536,
+  colors: {
+    gold: '#9e8622',
+    blue: '#3b6aa0',
+    red: '#a62828',
+  },
+  groups: [
+    { id: 'BB', label: 'フラグ (BB)', showOdds: true },
+    { id: 'RB', label: 'フラグ (RB)', showOdds: true },
+  ],
+  flags: FLAGS,
+  pressOrders: [
+    {
+      id: 'left',
+      label: '左1st',
+      reelImage: new URL('./img/reel.png', import.meta.url).href,
+      flagMap: FLAG_MAP.left,
+      prizeNames: PRIZE_NAMES.left,
+      prizeMap: PRIZE_MAP.left,
+    },
+    {
+      id: 'center',
+      label: '中1st',
+      reelImage: new URL('./img/reel_c.png', import.meta.url).href,
+      flagMap: FLAG_MAP.center,
+      prizeNames: PRIZE_NAMES.center,
+      prizeMap: PRIZE_MAP.center,
+    },
+  ],
+  links: [
+    {
+      label: '制御表',
+      text: 'スプレッドシートを開く',
+      url: 'https://docs.google.com/spreadsheets/d/1UNeeJEg-8OYhitDBvvdec_t7KXVm53Dh3pOAyrQQS9M/edit?gid=157777121#gid=157777121',
+    },
+  ],
+  contact: { text: '@doughnut_777', url: 'https://x.com/doughnut_777' },
 };

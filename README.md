@@ -5,6 +5,8 @@
 
 **公開ページ：https://tunhguod.github.io/HRFlagChk/**
 
+判定ロジックと画面は共通部分 [slot-flag-checker-core](https://github.com/tunhguod/slot-flag-checker-core) を使い、このリポジトリには機種定義だけを置いています。
+
 ## 使い方
 
 1. 左のリールをドラッグ（またはリールを選択して ↑ / ↓ キー）して、停止した図柄の位置に合わせます。
@@ -28,42 +30,41 @@
 
 ```
 .
-├── index.html        画面
-├── css/style.css     スタイル
+├── index.html        判別ページ
+├── core.js           コアの読み込み元（CORE_VERSION でバージョンを指定）
+├── machine.js        機種定義（制御表・フラグの置数・色分けなど）
 ├── img/
 │   ├── reel.png      リール画像（左1st用）
 │   └── reel_c.png    リール画像（中1st用）
-└── script/
-    ├── data.js       制御表・フラグ定義データ
-    └── script.js     画面の処理
+├── test.html         照合テスト
+└── test/golden.json  正解データ（コア導入前の版で記録した全状態の判定結果）
 ```
 
-## ローカルで動かす
+## データの更新
 
-ビルドは不要です。`index.html` をブラウザで直接開くか、簡易サーバーで配信してください。
+制御表やフラグの置数を変更する場合は `machine.js` を編集します。書き方は [slot-flag-checker-core の README](https://github.com/tunhguod/slot-flag-checker-core#機種定義) を参照してください。
+行数・列数が合っていない場合は、ページを開いたときにブラウザのコンソールへエラーが表示されます。
+
+制御表を意図して変更した場合は、`test/golden.json` の該当箇所も更新してください。
+
+## 手元で動かす
+
+ES モジュールを使うため、`index.html` をファイルとして直接開いても動きません。簡易サーバーで配信してください。
 
 ```bash
 py -m http.server 8000
 ```
 
-その後 http://localhost:8000 を開きます。
+その後 http://localhost:8000 を開きます。`test.html` を開くと、全状態の判定結果を正解データと照合します。
 
-## データの更新
-
-制御表やフラグの置数を変更する場合は `script/data.js` を編集します。
-
-- `FLAGS`：フラグ名・BB/RB の種別・設定1〜6の置数・バッジの色
-- `FLAG_MAP` / `PRIZE_MAP`：左1st（`left`）・中1st（`center`）ごとの制御表。行がリール位置、列が `FLAGS` / `PRIZE_NAMES` の並び順に対応します
-- `PRIZE_NAMES`：小役名
-
-行数・列数が合っていない場合は、ページを開いたときにブラウザのコンソールへエラーが表示されます。
+コアも手元で変更しながら確認する場合は、[slot-flag-checker-core の README](https://github.com/tunhguod/slot-flag-checker-core#手元での確認) の手順で、`?core=local` を付けて開きます。
 
 ## 公開ページの更新
 
 `main` ブランチに push すると、1〜2分で GitHub Pages に反映されます。
 
-CSS / JS を変更したときは、`index.html` で読み込んでいる `style.css?v=2` などの数字を上げてください。
-ブラウザに残った古い CSS / JS が新しい HTML と組み合わさって表示が崩れるのを防ぎます。
+- `core.js` / `machine.js` を変更したときは、`index.html` で読み込んでいる `?v=1` の数字を上げてください。ブラウザに残った古いファイルが新しいページと組み合わさるのを防ぎます。
+- コアを更新するときは、`core.js` の `CORE_VERSION` を上げ、`test.html` が PASS になることを確認してから push してください。
 
 ## 不具合報告・お問い合わせ
 
