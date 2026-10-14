@@ -2,7 +2,7 @@
 //
 // コアを更新するときは CORE_VERSION を変更する。
 // localhost で ?core=local を付けて開くと、隣のフォルダにある手元のコア（../slot-flag-checker-core）を使う。
-const CORE_VERSION = '1.0.0';
+const CORE_VERSION = '1.0.1';
 
 const isLocalhost = ['localhost', '127.0.0.1'].includes(location.hostname);
 const useLocalCore = isLocalhost && new URLSearchParams(location.search).get('core') === 'local';
