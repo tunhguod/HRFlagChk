@@ -192,7 +192,7 @@ export default {
     const bb = lit('BB');
     const rb = lit('RB');
     if (bb && !rb) return { text: 'BB1確', tone: 'strong' };
-    if (bb || rb) return { text: 'ボナ1確', tone: 'strong' };
+    if (bb || rb) return { text: '1確', tone: 'strong' };
     return { text: '非停止', tone: 'dim' };
   },
   links: [
