@@ -185,6 +185,16 @@ export default {
       prizeMap: PRIZE_MAP.center,
     },
   ],
+  // 制御ごとの特徴。小役が何も止まらない制御のときだけ表示する
+  notes({ groups, prizes }) {
+    if (prizes.length > 0) return null;
+    const lit = (id) => groups.some(({ group, hits }) => group.id === id && hits.length > 0);
+    const bb = lit('BB');
+    const rb = lit('RB');
+    if (bb && !rb) return { text: 'BB1確', tone: 'strong' };
+    if (bb || rb) return { text: 'ボナ1確', tone: 'strong' };
+    return { text: '非停止', tone: 'dim' };
+  },
   links: [
     {
       label: '制御表',
