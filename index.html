@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ハイパラフラグチェッカー</title>
   <style>
-    html { background: #111; color: #fff; font-family: sans-serif; }
+    html { background: #1d1f26; color: #ece8df; font-family: sans-serif; }
     .loading { position: fixed; inset: 0; display: grid; place-items: center; opacity: 0.6; }
   </style>
 </head>
@@ -15,8 +15,8 @@
   <div id="app"><p class="loading">読み込み中…</p></div>
   <!-- core.js / machine.js を更新したら ?v= の数字を上げる（ブラウザに残った古いファイルを読ませないため） -->
   <script type="module">
-    import { importCore } from './core.js?v=2';
-    import machine from './machine.js?v=1';
+    import { importCore } from './core.js?v=4';
+    import machine from './machine.js?v=2';
 
     const app = document.getElementById('app');
     try {
