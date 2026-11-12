@@ -6,7 +6,7 @@
 
 // group: 'BB' | 'RB'
 // nums: 設定1〜6の置数（/65536）
-// color: バッジの色（下の colors のキー）
+// color: ランプの色（重複する小役。slot-flag-checker-core の LAMP_COLORS の名前）
 // colorWhen: 指定時、その押し順・押下位置のときだけ color を付ける
 const FLAGS = [
   { name: 'A', group: 'BB', nums: [16, 16, 16, 16, 16, 16] },
@@ -24,12 +24,12 @@ const FLAGS = [
   { name: 'L1', group: 'BB', nums: [20, 20, 20, 20, 20, 20] },
   { name: 'L2', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'red', colorWhen: { orders: ['left'], positions: [[1, 4], [14, 21]] } },
   { name: 'M', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'blue' },
-  { name: 'N', group: 'BB', nums: [4, 4, 6, 6, 8, 12], color: 'gold' },
+  { name: 'N', group: 'BB', nums: [4, 4, 6, 6, 8, 12], color: 'yellow' },
   { name: 'O', group: 'BB', nums: [7, 7, 7, 7, 7, 7], color: 'blue' },
-  { name: 'P', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'gold' },
+  { name: 'P', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'yellow' },
   { name: 'Q', group: 'BB', nums: [7, 8, 9, 11, 12, 13], color: 'blue' },
   { name: 'R', group: 'RB', nums: [10, 10, 10, 10, 10, 10], color: 'blue' },
-  { name: 'S', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'gold' },
+  { name: 'S', group: 'BB', nums: [4, 4, 4, 4, 4, 4], color: 'yellow' },
   { name: 'T', group: 'RB', nums: [10, 11, 12, 14, 15, 18], color: 'blue' },
   { name: 'U', group: 'RB', nums: [23, 23, 23, 23, 23, 23] },
   { name: 'V', group: 'RB', nums: [20, 20, 20, 20, 20, 20] },
@@ -162,11 +162,6 @@ export default {
   settings: [1, 2, 3, 4, 5, 6],
   maxSlip: 4,
   denominator: 65536,
-  colors: {
-    gold: '#9e8622',
-    blue: '#3b6aa0',
-    red: '#a62828',
-  },
   groups: [
     { id: 'BB', label: 'フラグ (BB)', showOdds: true },
     { id: 'RB', label: 'フラグ (RB)', showOdds: true },
